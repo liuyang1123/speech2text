@@ -1,0 +1,63 @@
+
+from __future__ import absolute_import, division, print_function
+from scipy.io.wavfile import read as scipy_read
+import os
+from deepspeech.model import Model
+from json import load
+
+sample_folder = 'data/samples/'
+files = {str(file):sample_folder+file for file in os.listdir(sample_folder) if file.endswith('.wav')}
+
+output_graph = 'models/output_graph.pb'
+alphabet = 'models/alphabet.txt'
+lm_binary = 'models/lm.binary'
+trie = 'models/trie'
+
+#configuration
+with open('model_hyperparameters.json','rb') as f:
+    config = load(f)
+
+
+
+# These constants control the beam search decoder
+
+# Beam width used in the CTC decoder when building candidate transcriptions
+BEAM_WIDTH = config['BEAM_WIDTH']
+
+# The alpha hyperparameter of the CTC decoder. Language Model weight
+LM_WEIGHT = config['LM_WEIGHT']
+
+# The beta hyperparameter of the CTC decoder. Word insertion weight (penalty)
+WORD_COUNT_WEIGHT = config['WORD_COUNT_WEIGHT']
+
+# Valid word insertion weight. This is used to lessen the word insertion penalty
+# when the inserted word is part of the vocabulary
+VALID_WORD_COUNT_WEIGHT = config['VALID_WORD_COUNT_WEIGHT']
+
+
+# These constants are tied to the shape of the graph used (changing them changes
+# the geometry of the first layer), so make sure you use the same constants that
+# were used during training
+
+# Number of MFCC features to use
+N_FEATURES = config['N_FEATURES']
+
+# Size of the context window used for producing timesteps in the input vector
+N_CONTEXT = config['N_CONTEXT']
+
+
+
+
+ds = Model(lm_binary,N_FEATURES, N_CONTEXT, alphabet, BEAM_WIDTH)
+ds.enableDecoderWithLM(alphabet, lm_binary, trie, LM_WEIGHT,
+                              WORD_COUNT_WEIGHT, VALID_WORD_COUNT_WEIGHT)
+
+
+#dictionary comprehension to output
+prediction = {file_name:ds.stt(scipy_read(directory)[1],scipy_read(directory)[1]) for file_name,directory in files.items()}
+
+
+#save the prediction, via addition into a text file, accumulate.
+with open('output.txt','w+') as f:
+    f.write(str(prediction)+'\n')
+    f.close()

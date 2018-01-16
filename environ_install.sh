@@ -9,7 +9,23 @@ conda install pandas --yes
 conda install -c anaconda scipy --yes
 conda install -c conda-forge tensorflow-gpu --yes
 conda install -c anaconda pip --yes
+conda install -c anaconda swig --yes
+conda install -c conda-forge importlib --yes
+conda install -c anaconda requests --yes
+yes | pip install deepspeech
 yes | pip install deepspeech-gpu
+
+
+#install prerequisites for training
+python DeepSpeech/util/taskcluster.py --target /tmp --source tensorflow --artifact tensorflow_warpctc-1.4.0-cp27-cp27mu-linux_x86_64.whl
+yes | pip install /tmp/tensorflow_warpctc-1.4.0-cp27-cp27mu-linux_x86_64.whl
+yes | pip install -r DeepSpeech/requirements.txt
+
+
+#for when you have tensorflow with gpu
+pip uninstall tensorflow --yes
+python DeepSpeech/util/taskcluster.py --target /tmp --source tensorflow --arch gpu --artifact tensorflow_gpu_warpctc-1.4.0-cp27-cp27mu-linux_x86_64.whl
+yes | pip install /tmp/tensorflow_gpu_warpctc-1.4.0-cp27-cp27mu-linux_x86_64.whl
 
 #checks for OS since some tards use Mac
 
@@ -30,3 +46,7 @@ fi
 
 #this one gets the pretrained models
 wget -O - https://github.com/mozilla/DeepSpeech/releases/download/v0.1.0/deepspeech-0.1.0-models.tar.gz | tar xvfz -
+
+
+#this one gets some training data
+python DeepSpeech/bin/import_cv.py data/common_voice/
