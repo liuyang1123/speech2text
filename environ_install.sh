@@ -3,29 +3,32 @@
 # This one installs the new conda environment
 echo "Creating the deepspeech conda environment"
 echo "To activate this environment next time to run the speech2text, type source activate deepspeech"
+sudo echo #So that it makes installation easier later
+
 conda create --name deepspeech python=2.7 --yes
 source activate deepspeech
 conda install pandas --yes
 conda install -c anaconda scipy --yes
-conda install -c conda-forge tensorflow-gpu --yes
 conda install -c anaconda pip --yes
+conda install -c anaconda gcc --yes
 conda install -c anaconda swig --yes
 conda install -c conda-forge importlib --yes
 conda install -c anaconda requests --yes
-yes | pip install deepspeech
 yes | pip install deepspeech-gpu
 
 
 #install prerequisites for training
-python DeepSpeech/util/taskcluster.py --target /tmp --source tensorflow --artifact tensorflow_warpctc-1.4.0-cp27-cp27mu-linux_x86_64.whl
-yes | pip install /tmp/tensorflow_warpctc-1.4.0-cp27-cp27mu-linux_x86_64.whl
-yes | pip install -r DeepSpeech/requirements.txt
+yes | pip install -r requirements.txt
 
-
-#for when you have tensorflow with gpu
-pip uninstall tensorflow --yes
-python DeepSpeech/util/taskcluster.py --target /tmp --source tensorflow --arch gpu --artifact tensorflow_gpu_warpctc-1.4.0-cp27-cp27mu-linux_x86_64.whl
+#So that you can train, specific version of tensorflow-gpu
+cd DeepSpeech
+python util/taskcluster.py --target /tmp --source tensorflow --arch gpu --artifact tensorflow_gpu_warpctc-1.4.0-cp27-cp27mu-linux_x86_64.whl
 yes | pip install /tmp/tensorflow_gpu_warpctc-1.4.0-cp27-cp27mu-linux_x86_64.whl
+
+
+#build the native-client
+python util/taskcluster.py --target native-client/
+cd ..
 
 #checks for OS since some tards use Mac
 
