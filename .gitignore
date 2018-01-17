@@ -5,8 +5,8 @@ models/*
 *deepspeech_interpreter*
 
 
-#.idea/*
-#.idea
+.idea/*
+.idea
 
 DeepSpeech/
 DeepSpeech/*

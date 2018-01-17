@@ -2,7 +2,7 @@
 
 # This one installs the new virtualenv environment
 echo "Creating the deepspeech virtualenv environment"
-echo "To activate this environment next time, while in this dir, type source deepspeech_interpreter/bin/activate"
+echo "To activate this environment next time, type source ../deepspeech_interpreter/bin/activate"
 sudo echo #So that it makes installation easier later
 
 #get virtualenv
@@ -25,12 +25,11 @@ pip uninstall tensorflow --yes
 python util/taskcluster.py --target /tmp --source tensorflow --arch gpu --artifact tensorflow_gpu_warpctc-1.4.0-cp27-cp27mu-linux_x86_64.whl
 yes | pip install /tmp/tensorflow_gpu_warpctc-1.4.0-cp27-cp27mu-linux_x86_64.whl
 yes | pip install -r requirements.txt
+#build a GPU version native_client
+python util/taskcluster.py --arch gpu --target native_client
 
 cd ..
-python DeepSpeech/util/taskcluster.py --arch gpu --target native_client
 
 
-#this one gets the pretrained models
-wget -O - https://github.com/mozilla/DeepSpeech/releases/download/v0.1.0/deepspeech-0.1.0-models.tar.gz | tar xvfz -
 
 

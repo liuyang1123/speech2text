@@ -17,10 +17,7 @@ trie = 'models/trie'
 with open('model_hyperparameters.json','rb') as f:
     config = load(f)
 
-
-
 # These constants control the beam search decoder
-
 # Beam width used in the CTC decoder when building candidate transcriptions
 BEAM_WIDTH = config['BEAM_WIDTH']
 
@@ -34,7 +31,6 @@ WORD_COUNT_WEIGHT = config['WORD_COUNT_WEIGHT']
 # when the inserted word is part of the vocabulary
 VALID_WORD_COUNT_WEIGHT = config['VALID_WORD_COUNT_WEIGHT']
 
-
 # These constants are tied to the shape of the graph used (changing them changes
 # the geometry of the first layer), so make sure you use the same constants that
 # were used during training
@@ -47,25 +43,27 @@ N_CONTEXT = config['N_CONTEXT']
 
 
 
-
-ds = Model(lm_binary,N_FEATURES, N_CONTEXT, alphabet, BEAM_WIDTH)
-ds.enableDecoderWithLM(alphabet, lm_binary, trie, LM_WEIGHT,
-                              WORD_COUNT_WEIGHT, VALID_WORD_COUNT_WEIGHT)
-
-#for loop
-# prediction = dict()
-# for file_name,directory in files.items():
-#     wavelength,audio = wav.read(directory)
-#     prediction[file_name] = ds.stt(audio,wavelength)
+if __name__ == '__main__':
 
 
+    ds = Model(output_graph,N_FEATURES, N_CONTEXT, alphabet, BEAM_WIDTH)
+    ds.enableDecoderWithLM(alphabet, lm_binary, trie, LM_WEIGHT,
+                                  WORD_COUNT_WEIGHT, VALID_WORD_COUNT_WEIGHT)
 
-#dictionary comprehension to output
-prediction = {file_name:ds.stt(*wav.read(directory)[::-1])
-              for file_name,directory in files.items()}
-print (prediction)
+    #for loop
+    # prediction = dict()
+    # for file_name,directory in files.items():
+    #     wavelength,audio = wav.read(directory)
+    #     prediction[file_name] = ds.stt(audio,wavelength)
 
-#save the prediction, via addition into a text file, accumulate.
-with open('output.txt','w+') as f:
-    f.write(str(prediction)+'\n')
-    f.close()
+
+
+    #dictionary comprehension to output
+    prediction = {file_name:ds.stt(*wav.read(directory)[::-1])
+                  for file_name,directory in files.items()}
+    print (prediction)
+
+    #save the prediction, via addition into a text file, accumulate.
+    with open('output.txt','w+') as f:
+        f.write(str(prediction)+'\n')
+        f.close()
