@@ -1,6 +1,6 @@
 
 from __future__ import absolute_import, division, print_function
-from scipy.io.wavfile import read as scipy_read
+import scipy.io.wavfile as wav
 import os
 from deepspeech.model import Model
 from json import load
@@ -52,10 +52,18 @@ ds = Model(lm_binary,N_FEATURES, N_CONTEXT, alphabet, BEAM_WIDTH)
 ds.enableDecoderWithLM(alphabet, lm_binary, trie, LM_WEIGHT,
                               WORD_COUNT_WEIGHT, VALID_WORD_COUNT_WEIGHT)
 
+#for loop
+# prediction = dict()
+# for file_name,directory in files.items():
+#     wavelength,audio = wav.read(directory)
+#     prediction[file_name] = ds.stt(audio,wavelength)
+
+
 
 #dictionary comprehension to output
-prediction = {file_name:ds.stt(scipy_read(directory)[1],scipy_read(directory)[1]) for file_name,directory in files.items()}
-
+prediction = {file_name:ds.stt(*wav.read(directory)[::-1])
+              for file_name,directory in files.items()}
+print (prediction)
 
 #save the prediction, via addition into a text file, accumulate.
 with open('output.txt','w+') as f:

@@ -1,44 +1,36 @@
 #!/usr/bin/env bash
 
-# This one installs the new conda environment
-echo "Creating the deepspeech conda environment"
-echo "To activate this environment next time to run the speech2text, type source activate deepspeech"
+# This one installs the new virtualenv environment
+echo "Creating the deepspeech virtualenv environment"
+echo "To activate this environment next time, while in this dir, type source deepspeech_interpreter/bin/activate"
 sudo echo #So that it makes installation easier later
 
-conda create --name deepspeech python=2.7 --yes
-source activate deepspeech
-conda install pandas --yes
-conda install -c anaconda scipy --yes
+#get virtualenv
 conda install -c anaconda pip --yes
-conda install -c anaconda gcc --yes
-conda install -c anaconda swig --yes
-conda install -c conda-forge importlib --yes
-conda install -c anaconda requests --yes
+yes | pip install virtualenv
+#create the virtualenv
+virtualenv --python=/usr/bin/python2.7 ../deepspeech_interpreter
+#activate the virtualenv
+source ../deepspeech_interpreter/bin/activate
+# install
+yes | pip install https://index.taskcluster.net/v1/task/project.deepspeech.deepspeech.native_client.master.gpu/artifacts/public/deepspeech_gpu-0.1.0-cp27-cp27mu-manylinux1_x86_64.whl
 sudo apt-get install libcupti-dev --yes
+#So that you can train, specific version of tensorflow-gpu. Please install the Cuda libraries yourself
 
-
-
-#install prerequisites
-yes | pip install -r requirements.txt
-
-#So that you can train, specific version of tensorflow-gpu
-
+#get the DeepSpeech repo
+rm -r DeepSpeech -f
+git clone git@github.com:mozilla/DeepSpeech.git
 cd DeepSpeech
+pip uninstall tensorflow --yes
 python util/taskcluster.py --target /tmp --source tensorflow --arch gpu --artifact tensorflow_gpu_warpctc-1.4.0-cp27-cp27mu-linux_x86_64.whl
 yes | pip install /tmp/tensorflow_gpu_warpctc-1.4.0-cp27-cp27mu-linux_x86_64.whl
-
-#build native client with gpu binary
-python util/taskcluster.py --target . --arch gpu
+yes | pip install -r requirements.txt
 
 cd ..
-#finally install the thing
-yes | pip install deepspeech-gpu
+python DeepSpeech/util/taskcluster.py --arch gpu --target native_client
+
 
 #this one gets the pretrained models
 wget -O - https://github.com/mozilla/DeepSpeech/releases/download/v0.1.0/deepspeech-0.1.0-models.tar.gz | tar xvfz -
 
-
-#this one gets some training data
-python DeepSpeech/bin/import_cv.py data/
-tar -xvzf data/cv_corpus_v1.tar.gz data/
 

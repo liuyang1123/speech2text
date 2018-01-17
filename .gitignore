@@ -1,2 +1,14 @@
 models/*
-data/*
+
+
+#the interpreter
+*deepspeech_interpreter*
+
+
+#.idea/*
+#.idea
+
+DeepSpeech/
+DeepSpeech/*
+native_client/
+native_client/*
