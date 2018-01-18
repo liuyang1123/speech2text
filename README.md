@@ -1,11 +1,18 @@
 # speech2text
 
-Please install tensorflow GPU version with the proper Cuda requirements after you're done running environ_install.sh via bash
+1. Please make sure you have Git LFS
+https://git-lfs.github.com/
 
-You'll have a new environment called deepspeech_interpreter
+2. Please install CUDNN for tensorflow 1.4
+3. Install Cuda toolkit for tensorflow 1.4
+4. go to command line and clone this repo, then CD to it then run: 
 
-You'll need to have virtualenv installed, or this will be installed for you
+		bash environ_install.sh
+5. Learn to use virtualenv as we will standardize environments this way.
 
-To run the virtualenv and the standardized interpreter, just do virtualenv ../deepspeech_interpreter/bin/activate
 
-Once you activated the environment, then you can run python files properly
+To run the virtualenv and the standardized interpreter, on command line:
+	
+		virtualenv ../deepspeech_interpreter/bin/activate
+
+Once you activated the environment, then you can run python files properly.

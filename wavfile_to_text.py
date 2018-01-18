@@ -60,7 +60,13 @@ if __name__ == '__main__':
 
     #dictionary comprehension to output
     prediction = {file_name:ds.stt(*wav.read(directory)[::-1])
+<<<<<<< HEAD
                   for file_name,directory in files.items()}
+=======
+                  for file_name,directory in files.items()
+
+                  }
+>>>>>>> aae4c82... fix
     print (prediction)
 
     #save the prediction, via addition into a text file, accumulate.
