@@ -8,10 +8,10 @@ from json import load
 sample_folder = 'data/samples/'
 files = {str(file):sample_folder+file for file in os.listdir(sample_folder) if file.endswith('.wav')}
 
-output_graph = 'models/output_graph.pb'
-alphabet = 'models/alphabet.txt'
-lm_binary = 'models/lm.binary'
-trie = 'models/trie'
+output_graph = 'models/trained/output_graph.pb'
+alphabet = 'models/trained/alphabet.txt'
+lm_binary = 'models/trained/lm.binary'
+trie = 'models/trained/trie'
 
 #configuration
 with open('model_hyperparameters.json','rb') as f:
@@ -60,13 +60,9 @@ if __name__ == '__main__':
 
     #dictionary comprehension to output
     prediction = {file_name:ds.stt(*wav.read(directory)[::-1])
-<<<<<<< HEAD
-                  for file_name,directory in files.items()}
-=======
                   for file_name,directory in files.items()
 
                   }
->>>>>>> aae4c82... fix
     print (prediction)
 
     #save the prediction, via addition into a text file, accumulate.

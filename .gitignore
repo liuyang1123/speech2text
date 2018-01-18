@@ -1,5 +1,4 @@
-models/*
-
+models/trained/*
 
 #the interpreter
 *deepspeech_interpreter*
@@ -8,7 +7,5 @@ models/*
 .idea/*
 .idea
 
-DeepSpeech/
-DeepSpeech/*
 native_client/
 native_client/*

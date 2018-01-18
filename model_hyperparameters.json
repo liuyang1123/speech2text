@@ -1,6 +1,4 @@
 {
-
-
 "BEAM_WIDTH":500,
 
 "LM_WEIGHT" : 1.75,
@@ -12,5 +10,4 @@
 "N_FEATURES" : 26,
 
 "N_CONTEXT" : 9
-
 }
