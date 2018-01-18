@@ -1,14 +1,13 @@
 from __future__ import print_function
 import scipy.io.wavfile as wavfile
 from pydub import AudioSegment
-from resampy import resample
 import librosa
 from munging.file_methods import prefix_filename, find_filetype
 import os
+import numpy as np
 
 
 def standardized_read(filepath, wavelength):
-
     """Makes sure that files are read and standardized to a certain wavelength specified with wavelength
     output: audio_array( either resampled or not), samplerate
     inputs:
@@ -23,7 +22,7 @@ def standardized_read(filepath, wavelength):
     return audio_array, sample_rate
 
 
-def convert_wavelength_file(filepath, wavelength, replace=False):
+def convert_wavelength_file(filepath, wavelength, replace=True):
     """
     :param filepath: directory of file
     :param wavelength: new wavelength
@@ -33,11 +32,14 @@ def convert_wavelength_file(filepath, wavelength, replace=False):
 
     # since this is a conversion, we have to use librosa's library which is slower than scipy
     if not replace:
-        filepath = prefix_filename(filepath, '_new')
-    audio_array, sample_rate = librosa.load(filepath, sr=wavelength)
-    if sample_rate != wavelength:  # if not, then convert
-        audio_array = resample(audio_array, sample_rate, wavelength)
-        wavfile.write(filepath, wavelength, audio_array)
+        filepath = prefix_filename(filepath, 'new_')
+    # check whether it needs to be converted or not using scipy wav, faster load time
+    sample_rate, audio_array = wavfile.read(filepath)
+
+    if (sample_rate != wavelength) or (audio_array.dtype != np.int16):  # if not, then convert
+        audio_array, sample_rate = librosa.load(filepath, sr=wavelength)
+        maxv = np.iinfo(np.int16).max
+        librosa.output.write_wav(filepath, (audio_array*maxv).astype(np.int16), sample_rate)
         print("The file", '"{}"'.format(filepath), "has been converted from", sample_rate, "to", wavelength)
 
 
