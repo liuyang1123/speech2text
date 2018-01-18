@@ -18,6 +18,7 @@ sudo apt-get install libcupti-dev --yes
 
 #librosa and other sound packages
 yes | pip install librosa
+yes | pip install resampy
 yes | pip install pydub
 sudo apt-get install ffmpeg -y
 

@@ -9,5 +9,7 @@
 
 "N_FEATURES" : 26,
 
-"N_CONTEXT" : 9
+"N_CONTEXT" : 9,
+"standard_wavelength":16000
+
 }

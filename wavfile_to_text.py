@@ -1,12 +1,14 @@
 
 from __future__ import absolute_import, division, print_function
-import scipy.io.wavfile as wav
+from munging.preprocessing import standardized_read
+
 import os
 from deepspeech.model import Model
 from json import load
 
 sample_folder = 'data/samples/'
 files = {str(file):sample_folder+file for file in os.listdir(sample_folder) if file.endswith('.wav')}
+
 
 output_graph = 'models/trained/output_graph.pb'
 alphabet = 'models/trained/alphabet.txt'
@@ -20,6 +22,7 @@ with open('model_hyperparameters.json','rb') as f:
 # These constants control the beam search decoder
 # Beam width used in the CTC decoder when building candidate transcriptions
 BEAM_WIDTH = config['BEAM_WIDTH']
+standard_wavelength =config['standard_wavelength']
 
 # The alpha hyperparameter of the CTC decoder. Language Model weight
 LM_WEIGHT = config['LM_WEIGHT']
@@ -59,9 +62,8 @@ if __name__ == '__main__':
 
 
     #dictionary comprehension to output
-    prediction = {file_name:ds.stt(*wav.read(directory)[::-1])
+    prediction = {file_name:ds.stt(*standardized_read(directory,standard_wavelength))
                   for file_name,directory in files.items()
-
                   }
     print (prediction)
 
