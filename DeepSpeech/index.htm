@@ -40,7 +40,7 @@
 
     <script type="text/javascript">
 
-        const createChart = (id, title, fineprint, series, times) => {
+        const createChart = (id, title, fineprint, series, times) =;> {
 
             var panelRoot = $('#panels');
 
@@ -120,7 +120,8 @@
                     element: cTimeline[0]
                 });
 
-                times.forEach(time => annotator.add(time, new Date(time * 1000.0).toString()));
+                times.forEach(time = > annotator.add(time, new Date(time * 1000.0).toString());
+            )
                 annotator.update();
 
                 xAxis.render();
@@ -134,8 +135,7 @@
 
             yAxis.render();
 
-        };
-
+        }
         var ds = window.ALL_THE_DATA,
             i,
             reports  = {},
@@ -153,8 +153,7 @@
             else
                 overall_test_wer.push({ x: time, y: item.wer });
             times.push(time);
-        });
-
+        })
         const stdtext =
             'The Y axis plots the mean word error rate ' +
             '<a href="https://en.wikipedia.org/wiki/Word_error_rate">WER</a> ' +
