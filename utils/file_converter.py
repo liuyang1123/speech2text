@@ -1,5 +1,5 @@
 """ This thing takes a directory and converts all the files"""
-from munging.preprocessing import convert_wavelength_file, convert_mp3_to_wav
+from munging.formatting import convert_wavelength_file, convert_mp3_to_wav
 from munging.file_methods import find_filetype, find_directory__files
 import os
 
